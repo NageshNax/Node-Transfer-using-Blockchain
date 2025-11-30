@@ -68,9 +68,10 @@ http://localhost:5173/
 
 📸 Screenshots
 
-<img width="1920" height="1080" alt="Screenshot (41)" src="https://github.com/user-attachments/assets/0c8f14ab-930f-4fef-b390-1580a229385d" />
+<img width="1920" height="1080" alt="page1 jpg" src="https://github.com/user-attachments/assets/868bc0b8-fa66-4408-b176-4ecb48cc079e" />
+<img width="1920" height="1080" alt="page2 jpg" src="https://github.com/user-attachments/assets/0f0864d7-a13e-472c-96ae-4f822062b983" />
 
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1fc39ea3-a5af-45ab-9e6d-b559191f54fc" />
+
 
 
 🤝 Contributing
