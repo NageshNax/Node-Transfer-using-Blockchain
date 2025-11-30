@@ -1,58 +1,89 @@
+# Node Transfer – Blockchain Network Simulator
 
-**Use your preferred IDE**
+A visual and interactive **blockchain-based node-to-node data/message transfer simulator**.  
+This project demonstrates how transactions move across nodes, how blocks are mined, and how a blockchain ledger is maintained — all inside a clean modern UI built with React, TypeScript, TailwindCSS, and shadcn-ui.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🚀 Features
 
-Follow these steps:
+### 🔗 Blockchain Features
+- Genesis block generation
+- Add new transactions between nodes
+- Proof-of-work block mining (adjustable difficulty)
+- Automatic block creation for valid transactions
+- Chain verification (detect tampering or invalid hashes)
+- Full ledger inspector (hash, nonce, timestamp, previous hash, route, etc.)
+
+### 🌐 Node Network
+- Visual network of nodes (N1 → N2 → N3 → N4 → N5)
+- Select sender & receiver nodes
+- Send message/data transactions
+- Display message route inside the blockchain ledger
+
+### 🖥️ Frontend (React)
+- Modern UI using **shadcn-ui**
+- TailwindCSS styling with dark mode
+- Vite for super-fast local development
+- Live blockchain dashboard:
+  - Total Blocks  
+  - Total Transactions  
+  - Difficulty  
+- Ledger UI with expandable blocks
+
+### ⚙️ Tech Stack
+- **Frontend:** React + TypeScript + Vite  
+- **UI:** TailwindCSS + shadcn-ui  
+- **State / Logic:** Custom blockchain engine  
+- **Tooling:** ESLint, PostCSS, Prettier
+
+---
+
+
+---
+
+## 🛠️ Installation & Setup
+
+Make sure Node.js is installed (recommend **Node 18+**).
+
+1️⃣ Clone the Repository
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+2️⃣ Navigate to the Project
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+3️⃣ Install Dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4️⃣ Start Development Server
 npm run dev
-```
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Open in browser:
 
-**Use GitHub Codespaces**
+http://localhost:5173/
+(or the port shown in your terminal)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+📸 Screenshots
 
-## What technologies are used for this project?
+<img width="1920" height="1080" alt="Screenshot (41)" src="https://github.com/user-attachments/assets/0c8f14ab-930f-4fef-b390-1580a229385d" />
 
-This project is built with:
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1fc39ea3-a5af-45ab-9e6d-b559191f54fc" />
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
 
-## How can I deploy this project?
+🤝 Contributing
 
-Simply open [Lovable](https://lovable.dev/projects/bdb85a12-cca1-44f0-a1c7-d14399120ef5) and click on Share -> Publish.
+Pull requests are welcome!
+Feel free to open issues for bugs or feature requests.
 
-## Can I connect a custom domain to my Lovable project?
+📝 License
 
-Yes, you can!
+This project is open-source — use it for learning, teaching, or enhancing your portfolio.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+👤 Author
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Built by Nagesh
+Blockchain • React • Systems Development
+
