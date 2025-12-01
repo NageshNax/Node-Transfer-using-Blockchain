@@ -15,7 +15,7 @@ import { toast } from "sonner";
 
 interface TransactionFormProps {
   onSendTransaction: (sender: string, receiver: string, data: string) => void;
-  onBroadcastTransaction: (sender: string, data: string) => void;
+  onBroadcastTransaction: (sender: string, data: string, receivers?: string[]) => void;
   onVerifyChain: () => void;
   onDownloadChain: () => void;
 }
@@ -30,8 +30,10 @@ export const TransactionForm = ({
 }: TransactionFormProps) => {
   const [sender, setSender] = useState("Node1");
   const [receiver, setReceiver] = useState("Node2");
+  const [selectedReceivers, setSelectedReceivers] = useState<string[]>([]);
   const [data, setData] = useState("");
   const [isBroadcast, setIsBroadcast] = useState(false);
+  const [isMultiSelect, setIsMultiSelect] = useState(false);
 
   const handleSend = () => {
     if (!data.trim()) {
@@ -41,6 +43,12 @@ export const TransactionForm = ({
 
     if (isBroadcast) {
       onBroadcastTransaction(sender, data);
+    } else if (isMultiSelect) {
+      if (selectedReceivers.length === 0) {
+        toast.error("Please select at least one receiver node");
+        return;
+      }
+      onBroadcastTransaction(sender, data, selectedReceivers);
     } else {
       if (sender === receiver) {
         toast.error("Sender and receiver cannot be the same");
@@ -51,6 +59,16 @@ export const TransactionForm = ({
     setData("");
   };
 
+  const toggleReceiverSelection = (node: string) => {
+    setSelectedReceivers(prev =>
+      prev.includes(node)
+        ? prev.filter(n => n !== node)
+        : [...prev, node]
+    );
+  };
+
+  const availableReceivers = nodes.filter(node => node !== sender);
+
   return (
     <div className="glass-card rounded-2xl p-6 md:p-8 shadow-lg">
       <h2 className="text-2xl font-heading font-bold mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -58,20 +76,47 @@ export const TransactionForm = ({
       </h2>
 
       <div className="space-y-6 mb-8">
-        <div className="flex items-center space-x-3 p-4 rounded-xl bg-muted/50 border border-border/40 hover:border-border/60 transition-colors">
-          <Checkbox
-            id="broadcast"
-            checked={isBroadcast}
-            onCheckedChange={(checked) => setIsBroadcast(checked as boolean)}
-            className="h-5 w-5"
-          />
-          <Label
-            htmlFor="broadcast"
-            className="text-base font-medium leading-none cursor-pointer flex items-center gap-2 text-foreground"
-          >
-            <Radio className="h-5 w-5 text-primary" />
-            Broadcast to all nodes
-          </Label>
+        <div className="space-y-3">
+          <div className="flex items-center space-x-3 p-4 rounded-xl bg-muted/50 border border-border/40 hover:border-border/60 transition-colors">
+            <Checkbox
+              id="broadcast"
+              checked={isBroadcast}
+              onCheckedChange={(checked) => {
+                setIsBroadcast(checked as boolean);
+                if (checked) setIsMultiSelect(false);
+              }}
+              className="h-5 w-5"
+            />
+            <Label
+              htmlFor="broadcast"
+              className="text-base font-medium leading-none cursor-pointer flex items-center gap-2 text-foreground"
+            >
+              <Radio className="h-5 w-5 text-primary" />
+              Broadcast to all nodes
+            </Label>
+          </div>
+
+          <div className="flex items-center space-x-3 p-4 rounded-xl bg-muted/50 border border-border/40 hover:border-border/60 transition-colors">
+            <Checkbox
+              id="multiselect"
+              checked={isMultiSelect}
+              onCheckedChange={(checked) => {
+                setIsMultiSelect(checked as boolean);
+                if (checked) {
+                  setIsBroadcast(false);
+                  setSelectedReceivers([]);
+                }
+              }}
+              className="h-5 w-5"
+            />
+            <Label
+              htmlFor="multiselect"
+              className="text-base font-medium leading-none cursor-pointer flex items-center gap-2 text-foreground"
+            >
+              <Send className="h-5 w-5 text-secondary" />
+              Select specific nodes
+            </Label>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -95,23 +140,44 @@ export const TransactionForm = ({
 
           <div className="space-y-2.5">
             <Label htmlFor="receiver" className="text-sm font-medium text-foreground">
-              {isBroadcast ? "Receiver Nodes" : "Receiver Node"}
+              {isBroadcast ? "Receiver Nodes" : isMultiSelect ? "Select Receiver Nodes" : "Receiver Node"}
             </Label>
-            <Select value={isBroadcast ? "all" : receiver} onValueChange={setReceiver} disabled={isBroadcast}>
-              <SelectTrigger 
-                id="receiver" 
-                className="h-12 bg-muted/80 border-border/50 hover:border-border/80 transition-colors disabled:opacity-60"
-              >
-                <SelectValue placeholder={isBroadcast ? "All Nodes" : "Select node"} />
-              </SelectTrigger>
-              <SelectContent>
-                {nodes.map((node) => (
-                  <SelectItem key={node} value={node}>
-                    {node}
-                  </SelectItem>
+            {isMultiSelect ? (
+              <div className="grid grid-cols-2 gap-3 p-4 bg-muted/80 border border-border/50 rounded-xl">
+                {availableReceivers.map((node) => (
+                  <div key={node} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`receiver-${node}`}
+                      checked={selectedReceivers.includes(node)}
+                      onCheckedChange={() => toggleReceiverSelection(node)}
+                      className="h-4 w-4"
+                    />
+                    <Label
+                      htmlFor={`receiver-${node}`}
+                      className="text-sm font-medium cursor-pointer"
+                    >
+                      {node}
+                    </Label>
+                  </div>
                 ))}
-              </SelectContent>
-            </Select>
+              </div>
+            ) : (
+              <Select value={isBroadcast ? "all" : receiver} onValueChange={setReceiver} disabled={isBroadcast}>
+                <SelectTrigger 
+                  id="receiver" 
+                  className="h-12 bg-muted/80 border-border/50 hover:border-border/80 transition-colors disabled:opacity-60"
+                >
+                  <SelectValue placeholder={isBroadcast ? "All Nodes" : "Select node"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableReceivers.map((node) => (
+                    <SelectItem key={node} value={node}>
+                      {node}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
 
@@ -135,8 +201,14 @@ export const TransactionForm = ({
           onClick={handleSend}
           className="h-12 bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all md:col-span-1"
         >
-          {isBroadcast ? <Radio className="mr-2 h-5 w-5" /> : <Send className="mr-2 h-5 w-5" />}
-          {isBroadcast ? "Broadcast" : "Send"}
+          {isBroadcast ? (
+            <Radio className="mr-2 h-5 w-5" />
+          ) : isMultiSelect ? (
+            <Send className="mr-2 h-5 w-5" />
+          ) : (
+            <Send className="mr-2 h-5 w-5" />
+          )}
+          {isBroadcast ? "Broadcast" : isMultiSelect ? `Send to ${selectedReceivers.length} nodes` : "Send"}
         </Button>
         <Button
           onClick={onVerifyChain}

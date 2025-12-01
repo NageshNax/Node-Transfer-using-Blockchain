@@ -38,18 +38,18 @@ const Index = () => {
     }, 1500);
   };
 
-  const handleBroadcastTransaction = (sender: string, data: string) => {
+  const handleBroadcastTransaction = (sender: string, data: string, receivers?: string[]) => {
     const nodes = ["Node1", "Node2", "Node3", "Node4", "Node5"];
-    const receivers = nodes.filter(node => node !== sender);
+    const targetReceivers = receivers || nodes.filter(node => node !== sender);
     
-    toast.info("Broadcasting to all nodes...", {
-      description: `Mining ${receivers.length} blocks`,
+    toast.info(receivers ? "Sending to selected nodes..." : "Broadcasting to all nodes...", {
+      description: `Mining ${targetReceivers.length} blocks`,
     });
 
     let delay = 0;
     const newBlocks: Block[] = [];
     
-    receivers.forEach((receiver, index) => {
+    targetReceivers.forEach((receiver, index) => {
       setTimeout(() => {
         setActiveNodes({ sender, receiver });
         
@@ -61,11 +61,11 @@ const Index = () => {
           const newBlock = createBlock(prevBlock, sender, receiver, data);
           newBlocks.push(newBlock);
           
-          if (index === receivers.length - 1) {
+          if (index === targetReceivers.length - 1) {
             setBlockchain([...blockchain, ...newBlocks]);
             setActiveNodes(null);
-            toast.success("Broadcast complete!", {
-              description: `${receivers.length} blocks added to chain`,
+            toast.success(receivers ? "Transmission complete!" : "Broadcast complete!", {
+              description: `${targetReceivers.length} blocks added to chain`,
             });
           }
         }, 800);
