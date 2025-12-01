@@ -52,32 +52,35 @@ export const TransactionForm = ({
   };
 
   return (
-    <div className="glass-card rounded-2xl p-8 shadow-lg">
-      <h2 className="text-2xl font-heading font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+    <div className="glass-card rounded-2xl p-6 md:p-8 shadow-lg">
+      <h2 className="text-2xl font-heading font-bold mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
         Send Transaction
       </h2>
 
-      <div className="space-y-6">
-        <div className="flex items-center space-x-2 p-3 rounded-lg bg-muted/50 border border-border/30">
+      <div className="space-y-6 mb-8">
+        <div className="flex items-center space-x-3 p-4 rounded-xl bg-muted/50 border border-border/40 hover:border-border/60 transition-colors">
           <Checkbox
             id="broadcast"
             checked={isBroadcast}
             onCheckedChange={(checked) => setIsBroadcast(checked as boolean)}
+            className="h-5 w-5"
           />
           <Label
             htmlFor="broadcast"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex items-center gap-2"
+            className="text-base font-medium leading-none cursor-pointer flex items-center gap-2 text-foreground"
           >
-            <Radio className="h-4 w-4 text-primary" />
+            <Radio className="h-5 w-5 text-primary" />
             Broadcast to all nodes
           </Label>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="sender" className="text-foreground/80">Sender Node</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="space-y-2.5">
+            <Label htmlFor="sender" className="text-sm font-medium text-foreground">
+              Sender Node
+            </Label>
             <Select value={sender} onValueChange={setSender}>
-              <SelectTrigger id="sender" className="bg-muted border-border/50">
+              <SelectTrigger id="sender" className="h-12 bg-muted/80 border-border/50 hover:border-border/80 transition-colors">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -90,12 +93,15 @@ export const TransactionForm = ({
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="receiver" className="text-foreground/80">
+          <div className="space-y-2.5">
+            <Label htmlFor="receiver" className="text-sm font-medium text-foreground">
               {isBroadcast ? "Receiver Nodes" : "Receiver Node"}
             </Label>
             <Select value={isBroadcast ? "all" : receiver} onValueChange={setReceiver} disabled={isBroadcast}>
-              <SelectTrigger id="receiver" className="bg-muted border-border/50">
+              <SelectTrigger 
+                id="receiver" 
+                className="h-12 bg-muted/80 border-border/50 hover:border-border/80 transition-colors disabled:opacity-60"
+              >
                 <SelectValue placeholder={isBroadcast ? "All Nodes" : "Select node"} />
               </SelectTrigger>
               <SelectContent>
@@ -109,41 +115,43 @@ export const TransactionForm = ({
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="data" className="text-foreground/80">Transaction Data</Label>
+        <div className="space-y-2.5">
+          <Label htmlFor="data" className="text-sm font-medium text-foreground">
+            Transaction Data
+          </Label>
           <Input
             id="data"
             value={data}
             onChange={(e) => setData(e.target.value)}
             placeholder="Enter transaction message..."
-            className="bg-muted border-border/50"
+            className="h-12 bg-muted/80 border-border/50 hover:border-border/80 focus:border-primary/50 transition-colors"
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
           />
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Button
           onClick={handleSend}
-          className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all"
+          className="h-12 bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all md:col-span-1"
         >
-          {isBroadcast ? <Radio className="mr-2 h-4 w-4" /> : <Send className="mr-2 h-4 w-4" />}
-          {isBroadcast ? "Broadcast Transaction" : "Send Transaction"}
+          {isBroadcast ? <Radio className="mr-2 h-5 w-5" /> : <Send className="mr-2 h-5 w-5" />}
+          {isBroadcast ? "Broadcast" : "Send"}
         </Button>
         <Button
           onClick={onVerifyChain}
           variant="outline"
-          className="border-accent/50 text-accent hover:bg-accent/10 font-semibold"
+          className="h-12 border-accent/50 text-accent hover:bg-accent/10 font-semibold transition-all"
         >
-          <CheckCircle className="mr-2 h-4 w-4" />
+          <CheckCircle className="mr-2 h-5 w-5" />
           Verify Chain
         </Button>
         <Button
           onClick={onDownloadChain}
           variant="outline"
-          className="border-secondary/50 text-secondary hover:bg-secondary/10 font-semibold"
+          className="h-12 border-secondary/50 text-secondary hover:bg-secondary/10 font-semibold transition-all"
         >
-          <Download className="mr-2 h-4 w-4" />
+          <Download className="mr-2 h-5 w-5" />
           Download
         </Button>
       </div>
