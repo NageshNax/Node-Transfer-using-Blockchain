@@ -38,6 +38,43 @@ const Index = () => {
     }, 1500);
   };
 
+  const handleBroadcastTransaction = (sender: string, data: string) => {
+    const nodes = ["Node1", "Node2", "Node3", "Node4", "Node5"];
+    const receivers = nodes.filter(node => node !== sender);
+    
+    toast.info("Broadcasting to all nodes...", {
+      description: `Mining ${receivers.length} blocks`,
+    });
+
+    let delay = 0;
+    const newBlocks: Block[] = [];
+    
+    receivers.forEach((receiver, index) => {
+      setTimeout(() => {
+        setActiveNodes({ sender, receiver });
+        
+        setTimeout(() => {
+          const prevBlock = index === 0 
+            ? blockchain[blockchain.length - 1]
+            : newBlocks[index - 1];
+          
+          const newBlock = createBlock(prevBlock, sender, receiver, data);
+          newBlocks.push(newBlock);
+          
+          if (index === receivers.length - 1) {
+            setBlockchain([...blockchain, ...newBlocks]);
+            setActiveNodes(null);
+            toast.success("Broadcast complete!", {
+              description: `${receivers.length} blocks added to chain`,
+            });
+          }
+        }, 800);
+      }, delay);
+      
+      delay += 1300;
+    });
+  };
+
   const handleVerifyChain = () => {
     const invalid = verifyBlockchain(blockchain);
     setInvalidBlocks(invalid);
@@ -82,6 +119,7 @@ const Index = () => {
         {/* Transaction Form */}
         <TransactionForm
           onSendTransaction={handleSendTransaction}
+          onBroadcastTransaction={handleBroadcastTransaction}
           onVerifyChain={handleVerifyChain}
           onDownloadChain={handleDownloadChain}
         />
